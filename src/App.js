@@ -8,6 +8,9 @@ import {
   Code,
   Grid,
   theme,
+  Container,
+  SimpleGrid,
+  HStack
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
@@ -15,27 +18,25 @@ import { Logo } from './Logo';
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
+      <Box bg='tomato' w='100%' p={4} color='white' mb={4}>
+        This is the Box
       </Box>
-    </ChakraProvider>
+      <VStack>
+        <Box w="full" h='70vh' bg='tomato' color='white'>
+          <HStack>
+            <Box w="80vh" h='60vh' bg='green' color='white'>
+
+            </Box>
+            <Box w="20vh" h='60vh' bg='blue' color='white'>
+
+            </Box>
+          </HStack>
+        </Box>
+        <Box w="full" h='20vh' bg='tomato' color='white'>
+          dddd
+        </Box>
+      </VStack>
+    </ChakraProvider >
   );
 }
 
