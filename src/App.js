@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -10,31 +10,32 @@ import {
   theme,
   Container,
   SimpleGrid,
-  HStack
+  HStack,
+  Center,
+  Flex,
+  Spacer
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
+import Nav from './component/nav';
+import Settings from './component/settings';
+import Video from './component/video';
+import Bottom from './component/bottom';
 
 function App() {
+  const [frames, setFrames] = useState([]); // 存储每一帧的图像数据
+
   return (
     <ChakraProvider theme={theme}>
-      <Box bg='tomato' w='100%' p={4} color='white' mb={4}>
-        This is the Box
-      </Box>
-      <VStack>
-        <Box w="full" h='70vh' bg='tomato' color='white'>
-          <HStack>
-            <Box w="80vh" h='60vh' bg='green' color='white'>
-
-            </Box>
-            <Box w="20vh" h='60vh' bg='blue' color='white'>
-
-            </Box>
+      <VStack spacing={0}>
+        <Nav />
+        <Flex justifyContent="center" height="100%" width="100%" w="full" h='75vh' bg='#E1F3FF' color='white'>
+          <HStack justifyContent={'space-around'} spacing={20}>
+            <Video frames={frames} setFrames={setFrames} />
+            <Settings />
           </HStack>
-        </Box>
-        <Box w="full" h='20vh' bg='tomato' color='white'>
-          dddd
-        </Box>
+        </Flex>
+        <Bottom frames={frames} />
       </VStack>
     </ChakraProvider >
   );

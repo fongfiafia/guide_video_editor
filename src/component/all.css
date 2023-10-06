@@ -1,0 +1,22 @@
+.vis-current-time {
+    display: none !important;
+}
+
+/* 创建时间刻度的样式 */
+.vis.timeline .item {
+    border-top: 2px solid #000;
+    /* 刻度线的样式，可根据需求调整 */
+}
+
+/* 使用伪元素创建时间刻度之间的间隔 */
+.vis.timeline .item::before {
+    content: "";
+    width: 10px;
+    /* 刻度间隔宽度，根据需要调整 */
+    height: 2px;
+    /* 刻度间隔高度，根据需要调整 */
+    display: inline-block;
+    position: relative;
+    left: 10px;
+    /* 调整刻度间隔的位置 */
+}
