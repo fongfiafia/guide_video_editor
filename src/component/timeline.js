@@ -38,7 +38,7 @@ export default function MyTimeline({ frames, frameWidth, frameHeight }) {
     }, [frames, frameWidth, frameHeight])
 
 
-    return <Box w="full" h='20vh' bg='#DBC9E1' color='white'>
+    return <Box w="341px" h='20vh' bg='#DBC9E1' color='white'>
         <div ref={timelineRef} style={{ height: "40px" }}></div>;
     </Box>
 }

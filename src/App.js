@@ -20,10 +20,10 @@ import { Logo } from './Logo';
 import Nav from './component/nav';
 import Settings from './component/settings';
 import Video from './component/video';
-import Bottom from './component/bottom';
+import MyBottom from './component/botoom';
 
 function App() {
-  const [frames, setFrames] = useState([]); // 存储每一帧的图像数据
+  const [second, setSecond] = useState(0);
 
   return (
     <ChakraProvider theme={theme}>
@@ -31,11 +31,11 @@ function App() {
         <Nav />
         <Flex justifyContent="center" height="100%" width="100%" w="full" h='75vh' bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
-            <Video frames={frames} setFrames={setFrames} />
+            <Video targetSec={second} />
             <Settings />
           </HStack>
         </Flex>
-        <Bottom frames={frames} />
+        <MyBottom setSecond={setSecond} />
       </VStack>
     </ChakraProvider >
   );

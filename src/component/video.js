@@ -2,7 +2,7 @@ import { Box, Button, VStack, Input } from "@chakra-ui/react";
 import React, { useRef, useEffect, useState } from "react";
 import dd from "../video/test.mp4";
 
-export default function Video() {
+export default function Video({ targetSec }) {
     const canvasRef = useRef(null);
     const videoRef = useRef(null);
     const timeInputRef = useRef(null);
@@ -66,7 +66,15 @@ export default function Video() {
         return () => {
             stopRendering();
         };
-    }, [isPlaying]);
+    }, [isPlaying, targetSec]);
+
+    useEffect(() => {
+        // 当外部传入的 targetSec 发生变化时，将视频时间设置为 targetSec
+        videoRef.current.currentTime = targetSec;
+        videoRef.current.pause();
+    }, [targetSec]);
+
+
 
     return (
         <VStack justifySelf={'space-around'} spacing={10} h='700px'>

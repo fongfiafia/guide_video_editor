@@ -3,17 +3,8 @@ import React, { useEffect, useRef } from "react";
 import { Timeline } from "vis-timeline/standalone";
 import "vis-timeline/dist/vis-timeline-graph2d.css";
 
-export default function Bottom({ frames }) {
+export default function MyBottom({ frames, setSecond }) {
     const timelineRef = useRef(null);
-
-    // console.log(frames.length)
-
-    const formatTime = (timestamp) => {
-        const seconds = Math.floor(timestamp / 1000); // 转换为秒
-        return `${seconds}s`;
-    };
-
-
 
     useEffect(() => {
         const container = timelineRef.current;
@@ -23,6 +14,8 @@ export default function Bottom({ frames }) {
             min: 0,
             max: 20000, // 20秒，以毫秒为单位
             // step: 1000, // 1秒，以毫秒为单位
+            start: 0,
+            end: 20000,
             zoomable: false,
             stack: false, // 禁用事件元素的堆叠
             format: {
@@ -40,24 +33,29 @@ export default function Bottom({ frames }) {
         timeline.addCustomTime(0);
 
 
-
-        // 监听鼠标移动事件
-        container.addEventListener("mousemove", (event) => {
+        // 创建事件处理函数，此函数不会引起 timeline 的重新渲染
+        const handleMouseMove = (event) => {
             // 获取鼠标在时间轴上的 X 坐标位置
             const xPos = event.clientX - container.getBoundingClientRect().left;
 
-            // 获取时间轴视口的时间范围
-            // const viewportRange = timeline.getVisibleTimerange();
+            const timelineSection = timelineRef.current.querySelector('.vis-text.vis-minor.vis-odd');
+            // 获取元素刻度的长度
+            const timelineSecWidth = timelineSection.offsetWidth;
 
-            // // 获取时间轴的像素到秒的比例
-            // const pixelsPerSecond = (viewportRange.end - viewportRange.start) / timeline.dom.clientWidth;
+            // 获取包含指定类名的元素列表
+            const oddList = timelineRef.current.querySelectorAll('.vis-text.vis-minor.vis-odd');
+            const eventList = timelineRef.current.querySelectorAll('.vis-text.vis-minor.vis-even');
 
-            // // 使用比例和时间范围计算对应的时间秒数
-            // const timeInSeconds = viewportRange.start + (xPos * pixelsPerSecond);
+            const totalSec = oddList.length + eventList.length - 1 // 20s
 
-            // 在控制台中打印鼠标的 x 坐标
-            console.log("Mouse X Position:", xPos, "second is");
-        });
+            const perPxSec = 20 / (totalSec * timelineSecWidth)
+            const curTime = (perPxSec * xPos).toFixed(2);
+            console.log("cur Time is ", curTime)
+            setSecond(curTime)
+        };
+
+        // 监听鼠标移动事件
+        container.addEventListener("mousemove", handleMouseMove);
 
 
         // 创建用于存储每一帧的事件数据的数组
@@ -84,14 +82,14 @@ export default function Bottom({ frames }) {
         // 可以根据需要自定义时间轴的其他配置
 
         return () => {
-            // container.removeEventListener("mousemove", handleMouseMove);
+            container.removeEventListener("mousemove", handleMouseMove);
             timeline.destroy(); // 清理时间轴
         };
-    },)
+    }, [])
 
 
 
-    return <Box w="full" h='20vh' bg='#DBC9E1' color='white' overflowX="auto">
+    return <Box h='20vh' w='full' bg='gray.200'>
         <div ref={timelineRef} style={{ width: "100%", height: "100%" }}></div>
     </Box >
 }
