@@ -8,6 +8,8 @@ export default function Video({ targetSec }) {
     const timeInputRef = useRef(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const [delayedTargetSec, setDelayedTargetSec] = useState(targetSec); // 新增一个状态用于存储延迟的 targetSec
+
 
     const togglePlay = () => {
         if (isPlaying) {
@@ -37,6 +39,7 @@ export default function Video({ targetSec }) {
 
         const renderFrame = () => {
             if (isUnmounted) return;
+            console.log("111")
             context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
             animationFrameId = requestAnimationFrame(renderFrame);
         };
@@ -66,13 +69,29 @@ export default function Video({ targetSec }) {
         return () => {
             stopRendering();
         };
-    }, [isPlaying, targetSec]);
+    }, [isPlaying]);
 
     useEffect(() => {
-        // 当外部传入的 targetSec 发生变化时，将视频时间设置为 targetSec
-        videoRef.current.currentTime = targetSec;
-        videoRef.current.pause();
+        // 当外部传入的 targetSec 发生变化时，将延迟处理 targetSec
+        const timer = setTimeout(() => {
+            setDelayedTargetSec(targetSec);
+        }, 200); // 设置延迟时间，根据需求调整
+
+        return () => {
+            clearTimeout(timer); // 清除定时器
+        };
     }, [targetSec]);
+
+    useEffect(() => {
+        // 当延迟的 targetSec 发生变化时，处理视频时间
+        videoRef.current.currentTime = delayedTargetSec;
+        videoRef.current.pause();
+
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+
+        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+    }, [delayedTargetSec]);
 
 
 
@@ -97,3 +116,5 @@ export default function Video({ targetSec }) {
         </VStack>
     );
 }
+
+

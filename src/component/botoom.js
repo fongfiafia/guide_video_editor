@@ -51,7 +51,10 @@ export default function MyBottom({ frames, setSecond }) {
             const perPxSec = 20 / (totalSec * timelineSecWidth)
             const curTime = (perPxSec * xPos).toFixed(2);
             console.log("cur Time is ", curTime)
+
             setSecond(curTime)
+
+
         };
 
         // 监听鼠标移动事件
