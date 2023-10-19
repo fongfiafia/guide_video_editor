@@ -140,17 +140,18 @@ export default function Video({ targetSec, startTime, endTime }) {
         animate();
     }
 
-    async function exportVideo() {
-        const mp4Blob = await renderVideo(async function (frameIndex) {
-            if (frameIndex === canvasPlayer.totalFrames) return;
+    // async function exportVideo() {
+    //     const mp4Blob = await renderVideo(async function (frameIndex) {
+    //         if (frameIndex === canvasPlayer.totalFrames) return;
 
-            await canvasPlayer.seek(frameIndex);
+    //         await canvasPlayer.seek(frameIndex);
 
-            return canvasPlayer.canvas;
-        });
+    //         return canvasPlayer.canvas;
+    //     });
 
-        download(mp4Blob);
-    }
+    //     download(mp4Blob);
+    // }
+
 
     return (
         <VStack justifySelf={'space-around'} spacing={10} h='700px'>
@@ -170,10 +171,8 @@ export default function Video({ targetSec, startTime, endTime }) {
                 /> */}
                 <Button onClick={scaleLargeSmoothly}>放大</Button>
                 <Button onClick={scaleSmallSmoothly}>缩小</Button>
-                <Button onClick={exportVideo}>导出</Button>
+                {/* <Button onClick={exportVideo}>导出</Button> */}
             </Box>
         </VStack>
     );
 }
-
-
