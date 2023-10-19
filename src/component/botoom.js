@@ -24,10 +24,13 @@ export default function MyBottom({ frames, setSecond }) {
                 },
             },
             showCurrentTime: true,
+            groupOrder: 'y', // 根据轨道（y 值）进行排序    
         };
 
 
         // 创建时间轴
+        // var timeline = new vis.Timeline(container, items, groups, options);
+
         const timeline = new Timeline(container);
         timeline.setOptions(options);
         timeline.addCustomTime(0);
@@ -54,7 +57,6 @@ export default function MyBottom({ frames, setSecond }) {
 
             setSecond(curTime)
 
-
         };
 
         // 监听鼠标移动事件
@@ -67,19 +69,49 @@ export default function MyBottom({ frames, setSecond }) {
         //     content: `<img src="${frame}" width="${frameWidth}" height="${frameHeight}" />`,
         //     start: new Date(), // 根据需要设置帧的时间戳
         // }));
-        var items = [
-            { id: 1, content: 'item 1', start: '1000', end: '2000', y: 0, },
-            { id: 2, content: 'item 2', start: '2000', end: '4000', y: 0, },
-            { id: 3, content: 'item 3', start: '4000', end: '8000', y: 0, },
-            // { id: 3, content: 'item 3', start: '2014-04-18' },
-            // { id: 4, content: 'item 4', start: '2014-04-16', end: '2014-04-19' },
-            // { id: 5, content: 'item 5', start: '2014-04-25' },
-            // { id: 6, content: 'item 6', start: '2014-04-27', type: 'point' }
-        ];
+
+        var items = []
+        items.push({
+            id: 0,
+            group: 0,
+            start: '0000',
+            end: '20000',
+            type: "range",
+            content: "Item " + 0,
+        });
+
+        // items.push({
+        //     id: 3,
+        //     group: 1,
+        //     start: '1000',
+        //     end: '2000',
+        //     type: "range",
+        //     content: "Item " + 0,
+        // });
+
+        items.push({
+            id: 4,
+            group: 1,
+            start: '2000',
+            end: '8000',
+            type: "range",
+            content: "Item " + 1,
+        });
+
+        var groups = []
+        groups.push({
+            id: 0,
+            order: 0,
+        });
+        groups.push({
+            id: 1,
+            order: 1,
+        });
 
 
         // 添加事件到时间轴
         timeline.setItems(items)
+        timeline.setGroups(groups)
 
 
         // 可以根据需要自定义时间轴的其他配置

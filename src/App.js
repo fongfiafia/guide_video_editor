@@ -31,7 +31,7 @@ function App() {
         <Nav />
         <Flex justifyContent="center" height="100%" width="100%" w="full" h='75vh' bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
-            <Video targetSec={second} />
+            <Video targetSec={second} startTime={2} endTime={8} />
             <Settings />
           </HStack>
         </Flex>
