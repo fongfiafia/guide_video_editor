@@ -19,15 +19,20 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
 import Nav from './component/nav';
 import Settings from './component/settings';
-import Video from './component/video';
 import MyBottom from './component/botoom';
+import VideoWebGLRenderer from './component/threeTest'
 
 function App() {
   const [second, setSecond] = useState(0);
 
   return (
     <ChakraProvider theme={theme}>
-      <VStack spacing={0}>
+
+      <VideoWebGLRenderer seekTime={second} />
+
+      <MyBottom setSecond={setSecond} />
+
+      {/* <VStack spacing={0}>
         <Nav />
         <Flex justifyContent="center" height="100%" width="100%" w="full" h='75vh' bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
@@ -36,7 +41,7 @@ function App() {
           </HStack>
         </Flex>
         <MyBottom setSecond={setSecond} />
-      </VStack>
+      </VStack> */}
     </ChakraProvider >
   );
 }

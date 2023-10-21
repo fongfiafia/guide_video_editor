@@ -14,9 +14,11 @@
     "react-dom": "^18.2.0",
     "react-icons": "^3.11.0",
     "react-scripts": "5.0.1",
+    "react-three-fiber": "^6.0.13",
     "react-whammy": "^1.0.4",
     "recordrtc": "^5.6.2",
     "render-video": "^0.0.5",
+    "three": "^0.157.0",
     "vis": "^4.21.0-EOL",
     "vis-timeline": "^7.7.2",
     "web-vitals": "^2.1.4"
