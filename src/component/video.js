@@ -2,10 +2,9 @@ import { Box, Button, VStack, Input } from "@chakra-ui/react";
 import React, { useRef, useEffect, useState } from "react";
 import dd from "../video/test.mp4";
 
-export default function Video({ targetSec, startTime, endTime }) {
-    const canvasRef = useRef(null);
+export default function Video({ targetSec, canvasRef, startTime, endTime }) {
+
     const videoRef = useRef(null);
-    const timeInputRef = useRef(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -40,7 +39,6 @@ export default function Video({ targetSec, startTime, endTime }) {
                 return
             }
             animationFrameId = requestAnimationFrame(renderFrame);
-            console.log("ddd")
         };
 
         const startRendering = () => {
@@ -73,13 +71,16 @@ export default function Video({ targetSec, startTime, endTime }) {
     useEffect(() => {
         videoRef.current.pause();
         videoRef.current.currentTime = targetSec;
+        videoRef.current.playbackRate = 4;
 
+        console.log("current vidoe time", videoRef.current.currentTime, Date.now())
 
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
 
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        console.log("done", videoRef.current.currentTime)
+        console.log("done", videoRef.current.currentTime, Date.now())
+
     }, [targetSec]);
 
     function scaleLargeSmoothly() {
@@ -145,8 +146,8 @@ export default function Video({ targetSec, startTime, endTime }) {
     }
 
     return (
-        <VStack justifySelf={'space-around'} spacing={10} h='700px'>
-            <Box w="985px" h="534px" color='#2E2E2E' border={'solid'}>
+        <VStack justifySelf={'space-around'} spacing={10} h='700px' pt={10}>
+            <Box w="985px" h="534px" color='#2E2E2E'>
                 <canvas ref={canvasRef} width={985} height={534} >
                     <video ref={videoRef} src={dd} muted={false} controls={false} />
                 </canvas>

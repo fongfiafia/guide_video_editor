@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { Timeline } from "vis-timeline/standalone";
 import "vis-timeline/dist/vis-timeline-graph2d.css";
+import { throttle } from 'lodash';
 
 export default function MyBottom({ frames, setSecond }) {
     const timelineRef = useRef(null);
@@ -36,28 +37,19 @@ export default function MyBottom({ frames, setSecond }) {
         timeline.addCustomTime(0);
 
 
-        // 创建事件处理函数，此函数不会引起 timeline 的重新渲染
-        const handleMouseMove = (event) => {
-            // 获取鼠标在时间轴上的 X 坐标位置
+        const handleMouseMove = throttle((event) => {
             const xPos = event.clientX - container.getBoundingClientRect().left;
-
             const timelineSection = timelineRef.current.querySelector('.vis-text.vis-minor.vis-odd');
-            // 获取元素刻度的长度
             const timelineSecWidth = timelineSection.offsetWidth;
-
-            // 获取包含指定类名的元素列表
             const oddList = timelineRef.current.querySelectorAll('.vis-text.vis-minor.vis-odd');
             const eventList = timelineRef.current.querySelectorAll('.vis-text.vis-minor.vis-even');
-
-            const totalSec = oddList.length + eventList.length - 1 // 20s
-
-            const perPxSec = 20 / (totalSec * timelineSecWidth)
+            const totalSec = oddList.length + eventList.length - 1;
+            const perPxSec = 20 / (totalSec * timelineSecWidth);
             const curTime = (perPxSec * xPos).toFixed(2);
-            console.log("cur Time is ", curTime)
+            console.log("set", Date.now())
+            setSecond(curTime);
 
-            setSecond(curTime)
-
-        };
+        }, 100); // 控制节流的时间间隔，例如 20 毫秒
 
         // 监听鼠标移动事件
         container.addEventListener("mousemove", handleMouseMove);
@@ -121,8 +113,6 @@ export default function MyBottom({ frames, setSecond }) {
             timeline.destroy(); // 清理时间轴
         };
     }, [])
-
-
 
     return <Box h='20vh' w='full' bg='gray.200'>
         <div ref={timelineRef} style={{ width: "100%", height: "100%" }}></div>

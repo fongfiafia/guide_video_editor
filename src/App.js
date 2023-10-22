@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -24,15 +24,16 @@ import MyBottom from './component/botoom';
 
 function App() {
   const [second, setSecond] = useState(0);
+  const canvasRef = useRef(null);
 
   return (
     <ChakraProvider theme={theme}>
       <VStack spacing={0}>
         <Nav />
-        <Flex justifyContent="center" height="100%" width="100%" w="full" h='75vh' bg='#E1F3FF' color='white'>
+        <Flex justifyContent="center" height="full" width="full" bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
-            <Video targetSec={second} startTime={2} endTime={8} />
-            <Settings />
+            <Video canvasRef={canvasRef} targetSec={second} startTime={2} endTime={8} />
+            <Settings canvasRef={canvasRef} />
           </HStack>
         </Flex>
         <MyBottom setSecond={setSecond} />
