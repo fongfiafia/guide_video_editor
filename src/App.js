@@ -24,7 +24,7 @@ import MyBottom from './component/botoom';
 
 function App() {
   const [second, setSecond] = useState(0);
-  const canvasRef = useRef(null);
+  const canvasRefSettings = useRef(null);
 
   return (
     <ChakraProvider theme={theme}>
@@ -32,8 +32,8 @@ function App() {
         <Nav />
         <Flex justifyContent="center" height="full" width="full" bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
-            <Video canvasRef={canvasRef} targetSec={second} startTime={2} endTime={8} />
-            <Settings canvasRef={canvasRef} />
+            <Video canvasRef={canvasRefSettings} targetSec={second} startTime={2} endTime={8} />
+            <Settings canvasRef={canvasRefSettings} />
           </HStack>
         </Flex>
         <MyBottom setSecond={setSecond} />

@@ -2,8 +2,8 @@ import { Box, Button, VStack, Input } from "@chakra-ui/react";
 import React, { useRef, useEffect, useState } from "react";
 import dd from "../video/test.mp4";
 
-export default function Video({ targetSec, canvasRef, startTime, endTime }) {
-
+export default function Video({ targetSec, canvasRefSettings, startTime, endTime }) {
+    const canvasRef = useRef(null);
     const videoRef = useRef(null);
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -78,7 +78,12 @@ export default function Video({ targetSec, canvasRef, startTime, endTime }) {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
 
+        // const canvas2 = canvasRefSettings.current;
+        // const context2 = canvas2.getContext("2d")
+
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        // context2.drawImage(videoRef.current, 0, 0, canvas2.width, canvas2.height);
+
         console.log("done", videoRef.current.currentTime, Date.now())
 
     }, [targetSec]);
