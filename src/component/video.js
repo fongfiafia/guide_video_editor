@@ -29,14 +29,18 @@ export default function Video({ targetSec, startTime, endTime }) {
         const renderFrame = () => {
             if (isUnmounted) return;
 
-            const currentTime = videoRef.current.currentTime;
+            // const currentTime = videoRef.current.currentTime;
             // console.log(startTime, endTime, currentTime)
-            if (currentTime >= startTime && currentTime <= endTime) {
-                scaleLargeSmoothly(); // Call the scaling function
-            } else {
-                context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-                animationFrameId = requestAnimationFrame(renderFrame);
+            // if (currentTime >= startTime && currentTime <= endTime) {
+            // scaleLa  rgeSmoothly(); // Call the scaling function
+            // } else {
+            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+            if (!isPlaying) {
+                return
             }
+            animationFrameId = requestAnimationFrame(renderFrame);
+            console.log("ddd")
         };
 
         const startRendering = () => {
@@ -140,18 +144,6 @@ export default function Video({ targetSec, startTime, endTime }) {
         animate();
     }
 
-    async function exportVideo() {
-        const mp4Blob = await renderVideo(async function (frameIndex) {
-            if (frameIndex === canvasPlayer.totalFrames) return;
-
-            await canvasPlayer.seek(frameIndex);
-
-            return canvasPlayer.canvas;
-        });
-
-        download(mp4Blob);
-    }
-
     return (
         <VStack justifySelf={'space-around'} spacing={10} h='700px'>
             <Box w="985px" h="534px" color='#2E2E2E' border={'solid'}>
@@ -170,7 +162,6 @@ export default function Video({ targetSec, startTime, endTime }) {
                 /> */}
                 <Button onClick={scaleLargeSmoothly}>放大</Button>
                 <Button onClick={scaleSmallSmoothly}>缩小</Button>
-                <Button onClick={exportVideo}>导出</Button>
             </Box>
         </VStack>
     );
