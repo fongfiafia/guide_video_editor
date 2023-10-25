@@ -12,7 +12,6 @@ export default function Settings({ canvasRef }) {
                 <TabPanels>
                     <TabPanel >
                         <strong>Pick a point to Zoom</strong>
-
                         <Box w={500} h={300} border={'solid'} mt={2}>
                             <canvas ref={canvasRef} width={985} height={534} ></canvas>
                         </Box>

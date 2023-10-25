@@ -82,7 +82,7 @@ export default function Video({ targetSec, canvasRefSettings, startTime, endTime
         // const context2 = canvas2.getContext("2d")
 
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        // context2.drawImage(videoRef.current, 0, 0, canvas2.width, canvas2.height);
+        // context2.drawImage(videoRef.current, 0, 0, canvas2.width, canvas2.height); // 这里会出现问题。 我们想实现这里的canvas 和外部的cnavas鲜果一样，然后选取。
 
         console.log("done", videoRef.current.currentTime, Date.now())
 
