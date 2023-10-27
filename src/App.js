@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Box, Button, VStack, Input } from "@chakra-ui/react";
+import { Box, Button, VStack, Input, Center } from "@chakra-ui/react";
 import { throttle } from 'lodash';
 import { Timeline } from "vis-timeline/standalone";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import "vis-timeline/dist/vis-timeline-graph2d.css";
-import dd from "./video/test.mp4";
+// import dd from "./video/test.mp4";
 import {
   ChakraProvider,
   theme,
@@ -279,18 +279,58 @@ function App() {
   }, [])
 
 
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const videoURL = URL.createObjectURL(file);
+      videoRef.current.src = videoURL;
+      videoRef.current.load();
+
+      videoRef.current.onloadedmetadata = () => {
+        // 获取视频的总时长（以秒为单位）
+        const videoDuration = videoRef.current.duration;
+        console.log("视频时长（秒）：" + videoDuration);
+      };
+
+    }
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <VStack spacing={0}>
-        <Nav />
+        {/* <Nav /> */}
+
+        <Box bg='gray.200' w='full' h='5vh' color='white'>
+          <HStack>
+            <Input
+              type="file"
+              accept="video/mp4"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              display={"none"}
+            />
+            <Box>
+              <Button colorScheme='blue' size={"sm"} onClick={() => {
+                // Trigger the file input dialog
+                fileInputRef.current.click();
+              }}>Upload video</Button>
+            </Box>
+
+          </HStack>
+
+        </Box>
+
         <Flex justifyContent="center" height="full" width="full" bg='#E1F3FF' color='white'>
           <HStack justifyContent={'space-around'} spacing={20}>
             {/* <Video canvasRef={canvasRefSettings} targetSec={second} startTime={2} endTime={8} /> */}
             {/* video */}
             <VStack justifySelf={'space-around'} spacing={10} h='700px' pt={10}>
-              <Box w="985px" h="534px" color='#2E2E2E'>
+              <Box w="985px" h="534p·x" color='#2E2E2E'>
                 <canvas ref={canvasRef} width={985} height={534} >
-                  <video ref={videoRef} src={dd} muted={false} controls={false} />
+                  {/* <video ref={videoRef} src={dd} muted={false} controls={false} /> */}
+                  <video ref={videoRef} muted={false} controls={false} />
                 </canvas>
               </Box>
               <Box w="50px" h="50px" color='#2E2E2E'>
