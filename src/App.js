@@ -16,6 +16,7 @@ import Nav from './component/nav';
 function App() {
   const [second, setSecond] = useState(0);
   const canvasRefSettings = useRef(null);
+  const [videoDuration, setVideoDuration] = useState(0);
 
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -106,36 +107,77 @@ function App() {
 
   }, [second]);
 
-  function scaleLargeSmoothly() {
+  // function scaleLargeSmoothly(x, y) {
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas.getContext("2d");
+  //   let width = canvas.width;
+  //   let height = canvas.height;
+
+  //   const targetWidth = width * 2;
+  //   const targetHeight = height * 2;
+
+  //   const scaleRatio = 0.05;
+
+  //   console.log("x y is ", x, y)
+  //   const centerX = x; // 使用指定的 x 坐标作为中心点的 x 坐标
+  //   const centerY = y; // 使用指定的 y 坐标作为中心点的 y 坐标
+
+  //   // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //   // // *2 表示乘以倍数
+  //   console.log("lage width height", x - x * 2, y - y * 2)
+  //   ctx.drawImage(videoRef.current, x - x * 2, y - y * 2, targetWidth, targetHeight);
+
+
+
+  //   // animate();
+  // }
+
+  function scaleLargeSmoothly(x, y) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    let width = canvas.width;
-    let height = canvas.height;
+    const width = canvas.width;
+    const height = canvas.height;
 
-    const targetWidth = width * 1.5;
-    const targetHeight = height * 1.5;
+    const targetWidth = width * 2;
+    const targetHeight = height * 2;
+    const scaleRatio = 0.06;
 
-    const scaleRatio = 0.05;
+    // 定义动画的状态
+    let currentWidth = width;
+    let currentHeight = height;
 
-    const centerX = width / 2; // 计算画面中心点的 x 坐标
-    const centerY = height / 2; // 计算画面中心点的 y 坐标
+    // 创建动画循环
+    function animate() {
+      // console.log("csss", targetWidth - currentWidth, targetHeight - currentHeight)
+      if ((targetWidth - currentWidth) < scaleRatio || (targetHeight - currentHeight) < scaleRatio) {
+        return
+      }
+      if (currentWidth < targetWidth || currentHeight < targetHeight) {
+        // 逐渐增加宽度和高度
+        currentWidth += (targetWidth - currentWidth) * scaleRatio;
+        currentHeight += (targetHeight - currentHeight) * scaleRatio;
 
-    const animate = () => {
-      if (width < targetWidth || height < targetHeight) {
-        width += (targetWidth - width) * scaleRatio;
-        height += (targetHeight - height) * scaleRatio;
-
-        const startX = centerX - (width / 2); // 计算绘制起点的 x 坐标
-        const startY = centerY - (height / 2); // 计算绘制起点的 y 坐标
+        const startX = - (currentWidth * (x / width) - x);
+        const startY = - (currentHeight * (y / height) - y);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(videoRef.current, startX, startY, width, height);
-        requestAnimationFrame(animate);
+        ctx.drawImage(videoRef.current, startX, startY, currentWidth, currentHeight);
 
+
+        requestAnimationFrame(animate);
       }
-    };
+    }
+
+    // 启动动画
     animate();
   }
+
+
+
+
+
+
+
 
   function scaleSmallSmoothly() {
     const canvas = canvasRef.current;
@@ -174,13 +216,19 @@ function App() {
   useEffect(() => {
     const container = timelineRef.current;
     container.classList.add("vis", "timeline");
+    let rounded = Math.round(videoDuration)
+    // 表示还没有导入视频
+    if (rounded === 0) {
+      return
+    }
+    console.log("rounded ", rounded)
     const options = {
       orientation: 'top',
       min: 0,
-      max: 20000, // 20秒，以毫秒为单位
-      // step: 1000, // 1秒，以毫秒为单位
+      max: rounded * 1000, // 20秒，以毫秒为单位
+      step: 1000, // 1秒，以毫秒为单位
       start: 0,
-      end: 20000,
+      end: rounded * 1000,
       zoomable: false,
       stack: false, // 禁用事件元素的堆叠
       format: {
@@ -191,10 +239,6 @@ function App() {
       showCurrentTime: true,
       groupOrder: 'y', // 根据轨道（y 值）进行排序    
     };
-
-
-    // 创建时间轴
-    // var timeline = new vis.Timeline(container, items, groups, options);
 
     const timeline = new Timeline(container);
     timeline.setOptions(options);
@@ -212,57 +256,40 @@ function App() {
       const curTime = (perPxSec * xPos).toFixed(2);
       console.log("set", Date.now())
       setSecond(curTime);
-
     }, 100); // 控制节流的时间间隔，例如 20 毫秒
 
     // 监听鼠标移动事件
     container.addEventListener("mousemove", handleMouseMove);
 
-
-    // 创建用于存储每一帧的事件数据的数组
-    // const items = frames.map((frame, index) => ({
-    //     id: index,
-    //     content: `<img src="${frame}" width="${frameWidth}" height="${frameHeight}" />`,
-    //     start: new Date(), // 根据需要设置帧的时间戳
-    // }));
-
     var items = []
+    var groups = []
     items.push({
       id: 0,
       group: 0,
-      start: '0000',
-      end: '20000',
+      start: '0',
+      end: rounded * 1000,
       type: "range",
-      content: "Item " + 0,
+      content: "",
     });
-
-    // items.push({
-    //     id: 3,
-    //     group: 1,
-    //     start: '1000',
-    //     end: '2000',
-    //     type: "range",
-    //     content: "Item " + 0,
-    // });
-
-    items.push({
-      id: 4,
-      group: 1,
-      start: '2000',
-      end: '8000',
-      type: "range",
-      content: "Item " + 1,
-    });
-
-    var groups = []
     groups.push({
       id: 0,
       order: 0,
     });
-    groups.push({
-      id: 1,
-      order: 1,
-    });
+
+    // 用来放置zoom 轨道
+    // items.push({
+    //   id: 4,
+    //   group: 1,
+    //   start: '2000',
+    //   end: '8000',
+    //   type: "range",
+    //   content: "Item " + 1,
+    // });
+
+    // groups.push({
+    //   id: 1,
+    //   order: 1,
+    // });
 
 
     // 添加事件到时间轴
@@ -271,12 +298,11 @@ function App() {
 
 
     // 可以根据需要自定义时间轴的其他配置
-
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       timeline.destroy(); // 清理时间轴
     };
-  }, [])
+  }, [videoDuration])
 
 
   const fileInputRef = useRef(null);
@@ -291,10 +317,37 @@ function App() {
       videoRef.current.onloadedmetadata = () => {
         // 获取视频的总时长（以秒为单位）
         const videoDuration = videoRef.current.duration;
+        setVideoDuration(videoDuration)
         console.log("视频时长（秒）：" + videoDuration);
       };
-
     }
+  };
+
+  // 鼠标按下事件处理函数
+  const handleMouseDown = (event) => {
+    const settingsCanvasWidth = canvasRefSettings.current.offsetWidth;
+    const settingsCanvasHeight = canvasRefSettings.current.offsetHeight;
+
+    const canvasWidth = canvasRef.current.offsetWidth;
+    const canvasHeight = canvasRef.current.offsetHeight;
+
+
+    // 获取鼠标在 canvasRefSettings 上的坐标
+    const xOnSettingsCanvas = event.nativeEvent.offsetX;
+    const yOnSettingsCanvas = event.nativeEvent.offsetY;
+
+    // 使用转换函数将坐标映射到 canvasRef 上
+    const xOnMainCanvas = Math.round((xOnSettingsCanvas / settingsCanvasWidth) * canvasWidth)
+    const yOnMainCanvas = Math.round((yOnSettingsCanvas / settingsCanvasHeight) * canvasHeight)
+
+    // 在这里你可以使用 xOnMainCanvas 和 yOnMainCanvas 来执行你的操作
+    console.log('Mouse Down on canvasRefSettings:');
+    console.log('xOnSettingsCanvas:', xOnSettingsCanvas);
+    console.log('yOnSettingsCanvas:', yOnSettingsCanvas);
+    console.log('xOnMainCanvas:', xOnMainCanvas);
+    console.log('yOnMainCanvas:', yOnMainCanvas);
+
+    scaleLargeSmoothly(xOnMainCanvas, yOnMainCanvas)
   };
 
   return (
@@ -327,7 +380,7 @@ function App() {
             {/* <Video canvasRef={canvasRefSettings} targetSec={second} startTime={2} endTime={8} /> */}
             {/* video */}
             <VStack justifySelf={'space-around'} spacing={10} h='700px' pt={10}>
-              <Box w="985px" h="534p·x" color='#2E2E2E'>
+              <Box w="985px" h="534px" color='#2E2E2E'>
                 <canvas ref={canvasRef} width={985} height={534} >
                   {/* <video ref={videoRef} src={dd} muted={false} controls={false} /> */}
                   <video ref={videoRef} muted={false} controls={false} />
@@ -342,8 +395,8 @@ function App() {
                     type="number"
                     placeholder="跳转到时间（秒）"
                 /> */}
-                <Button onClick={scaleLargeSmoothly}>放大</Button>
-                <Button onClick={scaleSmallSmoothly}>缩小</Button>
+                {/* <Button onClick={scaleLargeSmoothly}>放大</Button>
+                <Button onClick={scaleSmallSmoothly}>缩小</Button> */}
               </Box>
             </VStack>
             {/* video */}
@@ -362,7 +415,7 @@ function App() {
                     <TabPanel >
                       <strong>Pick a point to Zoom</strong>
                       <Box w={500} h={300} border={'solid'} mt={2}>
-                        <canvas ref={canvasRefSettings} width={500} height={300} >
+                        <canvas ref={canvasRefSettings} width={500} height={300} onMouseDown={handleMouseDown}>
                         </canvas>
                       </Box>
                     </TabPanel>
