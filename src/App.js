@@ -17,11 +17,15 @@ function App() {
   const [second, setSecond] = useState(0);
   const canvasRefSettings = useRef(null);
   const [videoDuration, setVideoDuration] = useState(0);
+  let timelineTmp = null;
 
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
+
+  var items = []
+  var groups = []
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -172,13 +176,6 @@ function App() {
     animate();
   }
 
-
-
-
-
-
-
-
   function scaleSmallSmoothly() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -212,10 +209,13 @@ function App() {
 
 
   const timelineRef = useRef(null);
+  const container = timelineRef.current;
+  container.classList.add("vis", "timeline");
+  const timeline = new Timeline(container);
 
   useEffect(() => {
-    const container = timelineRef.current;
-    container.classList.add("vis", "timeline");
+
+
     let rounded = Math.round(videoDuration)
     // 表示还没有导入视频
     if (rounded === 0) {
@@ -240,7 +240,7 @@ function App() {
       groupOrder: 'y', // 根据轨道（y 值）进行排序    
     };
 
-    const timeline = new Timeline(container);
+
     timeline.setOptions(options);
     timeline.addCustomTime(0);
 
@@ -261,8 +261,6 @@ function App() {
     // 监听鼠标移动事件
     container.addEventListener("mousemove", handleMouseMove);
 
-    var items = []
-    var groups = []
     items.push({
       id: 0,
       group: 0,
@@ -276,25 +274,11 @@ function App() {
       order: 0,
     });
 
-    // 用来放置zoom 轨道
-    // items.push({
-    //   id: 4,
-    //   group: 1,
-    //   start: '2000',
-    //   end: '8000',
-    //   type: "range",
-    //   content: "Item " + 1,
-    // });
-
-    // groups.push({
-    //   id: 1,
-    //   order: 1,
-    // });
-
-
     // 添加事件到时间轴
     timeline.setItems(items)
     timeline.setGroups(groups)
+
+    timelineTmp = timeline;
 
 
     // 可以根据需要自定义时间轴的其他配置
@@ -349,6 +333,25 @@ function App() {
 
     scaleLargeSmoothly(xOnMainCanvas, yOnMainCanvas)
   };
+
+  function newZoomTrack() {
+    //  用来放置zoom 轨道
+    items.push({
+      id: 4,
+      group: 1,
+      start: '2000',
+      end: '8000',
+      type: "range",
+      content: "Item " + 1,
+    });
+
+    groups.push({
+      id: 1,
+      order: 1,
+    });
+    console.log(groups)
+    // console.log(timelineTmp.getVisibleItems())
+  }
 
   return (
     <ChakraProvider theme={theme}>
@@ -418,6 +421,9 @@ function App() {
                         <canvas ref={canvasRefSettings} width={500} height={300} onMouseDown={handleMouseDown}>
                         </canvas>
                       </Box>
+                      <Button mt={5} onClick={newZoomTrack}>
+                        确定？
+                      </Button>
                     </TabPanel>
                     <TabPanel>
                       <p>two!</p>
